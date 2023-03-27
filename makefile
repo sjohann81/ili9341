@@ -22,16 +22,27 @@ AVRDUDE_PART=m2560
 #PROGRAMMER = arduino -P $(SERIAL_PROG)
 PROGRAMMER = wiring -P $(SERIAL_PROG) -D
 
-all:
-	$(CC) $(CFLAGS) -c spi.c -o spi.o
-	$(CC) $(CFLAGS) -c ili9341.c -o ili9341.o
-	$(CC) $(CFLAGS) -c gdi.c -o gdi.o
-	$(CC) $(CFLAGS) -c main.c -o main.o
+all: main
+
+main: spi.o ili9341.o gdi.o main.o
 	$(CC) $(CFLAGS) spi.o ili9341.o gdi.o main.o -o code.elf
 	$(OBJCOPY) -R .eeprom -O ihex code.elf code.hex
 	$(OBJDUMP) -d code.elf > code.lst
 	$(OBJDUMP) -h code.elf > code.sec
 	$(SIZE) code.elf
+
+main.o: main.c
+	$(CC) $(CFLAGS) -c main.c
+
+gdi.o: gdi.c
+	$(CC) $(CFLAGS) -c gdi.c
+
+ili9341.o: ili9341.c
+	$(CC) $(CFLAGS) -c ili9341.c
+
+spi.o: spi.c
+	$(CC) $(CFLAGS) -c spi.c
+
 
 flash:
 	avrdude -C $(AVRDUDE_CONFIG) -p $(AVRDUDE_PART) -U flash:w:code.hex -y -c $(PROGRAMMER)
