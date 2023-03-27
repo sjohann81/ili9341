@@ -17,9 +17,9 @@ void display_test1()
 	display_hex(0xdeadbeef, 60, 100, 3, OLIVE);
 }
 
-void display_test2()
+void display_test2(int size)
 {
-	int i, j, k, size = 2;
+	int i, j, k;
 	
 	for (j = 10, k = 0; k < 255; j += FONT_Y * size) {
 		for (i = 1; i < max_x - 1 - FONT_X * size && k < 255; i += FONT_X * size, k++) {
@@ -204,12 +204,22 @@ int main(void) {
 		display_background(BLACK);
 
 		ili9341_orientation(LANDSCAPE);
-		display_test2();
+		display_test2(2);
 		_delay_ms(4000);
 		display_background(BLUE);
 
 		ili9341_orientation(PORTRAIT);
-		display_test2();
+		display_test2(2);
+		_delay_ms(4000);
+		display_background(BLACK);
+
+		ili9341_orientation(LANDSCAPE);
+		display_test2(1);
+		_delay_ms(4000);
+		display_background(BLUE);
+
+		ili9341_orientation(PORTRAIT);
+		display_test2(1);
 		_delay_ms(4000);
 		display_background(BLACK);
 		
